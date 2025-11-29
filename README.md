@@ -126,7 +126,7 @@ $$
 We implement three variants:
 
 - **V1 — Classical Armijo Backtracking:** standard backtracking to satisfy the Armijo inequality.  
-- **V2 — Adaptive Armijo (curvature correction):** adjust \(\eta\) using curvature estimates, e.g. \(\eta \leftarrow \rho(\kappa)\eta\), with \(\rho(\kappa)\in(0,1)\).  
+- **V2 — Adaptive Armijo (curvature correction):** adjust $$\(\eta\)$$ using curvature estimates, e.g. $$\(\eta \leftarrow \rho(\kappa)\eta\), with \(\rho(\kappa)\in(0,1)\)$$.  
 - **V3 — Non-monotone Armijo:** allow temporary increases in loss using a windowed max:
 
 $$
