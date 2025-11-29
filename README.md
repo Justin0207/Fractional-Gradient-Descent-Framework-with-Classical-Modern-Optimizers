@@ -67,7 +67,7 @@ This repository includes a full example demonstrating:
 
 - Logistic Regression  
 - Lion optimizer  
-- Fractional gradient with \( \alpha = 0.5 \)
+- Fractional gradient with $$\( \alpha = 0.5 \)$$
 
 | Model                             | Optimizer | Fractional α | Accuracy |
 |----------------------------------|-----------|--------------|----------|
