@@ -33,7 +33,7 @@ The system is structured to provide clarity, extensibility, and ease of integrat
 |--------|-------------|
 | **V1** | Classical Armijo backtracking |
 | **V2** | Adaptive Armijo with curvature-based step-size correction |
-| **V3** | Non-monotone Armijo (suitable for noisy or rugged loss landscapes) |
+| **V3** | Non-monotone Armijo (based on [1]) |
 
 ### **Modern Optimization Algorithms**
 
@@ -188,4 +188,10 @@ MIT License. See `LICENSE` for details.
 
 ---
 
+### References
+
+[1] Hafshejani, S. F., Gaur, D., Hossain, S., & Benkoczi, R. (2023).  
+*Fast Armijo Line Search for Stochastic Gradient Descent.*  
+[2] Chen, S., Zhang, C., & Mu, H. (2024). An adaptive learning rate deep learning optimizer using long and short-term gradients based on G–L fractional-order derivative. Neural Processing Letters, 56(2), 106.
+[3] Zhou, X., Zhao, C., & Huang, Y. (2023). A deep learning optimizer based on Grünwald–Letnikov fractional order definition. Mathematics, 11(2), 316.
 
