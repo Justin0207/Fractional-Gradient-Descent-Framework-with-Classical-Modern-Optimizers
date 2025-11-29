@@ -22,7 +22,7 @@ The system is structured to provide clarity, extensibility, and ease of integrat
 
 ### **Fractional Gradient Descent**
 - Grünwald–Letnikov–based fractional differentiation  
-- Adjustable fractional order \( \alpha \in (0,1] \)  
+- Adjustable fractional order $$\( \alpha \in (0,1] \)$$
 - Efficient numerical implementation  
 - Gradient history for memory-aware updates  
 - Applicable to both weights and bias  
@@ -75,7 +75,7 @@ This repository includes a full example demonstrating:
 | Scikit-Learn Logistic Regression | LBFGS     | —            | 75.32%   |
 
 ### **Key Findings**
-- Fractional Lion improved accuracy by **+3.9%**.  
+- Fractional Lion improved accuracy by +3.9%.  
 - Fractional gradients reduce oscillatory behavior in Lion's update rule.  
 - Demonstrates the promising potential of fractional-order optimization in machine learning.  
 
@@ -83,15 +83,15 @@ This repository includes a full example demonstrating:
 
 ## 📘 Mathematical Foundations
 
-This section provides the theoretical background behind our **Fractional Gradient Framework**, **Armijo Line Search Variants**, and **Optimizer Integrations**.
+This section provides the theoretical background behind our Fractional Gradient Framework, Armijo Line Search Variants, and Optimizer Integrations.
 
 ---
 
 ### 1. Fractional Calculus (Grünwald–Letnikov Derivative)
 
-Fractional calculus extends classical differentiation by permitting **non-integer derivative orders**, which introduces a memory effect: gradients incorporate information from previous states.
+Fractional calculus extends classical differentiation by permitting non-integer derivative orders, which introduces a memory effect: gradients incorporate information from previous states.
 
-The Grünwald–Letnikov fractional derivative of order \( \alpha \) is defined (in the continuous limit) as:
+The Grünwald–Letnikov fractional derivative of order $$\( \alpha \)$$ is defined (in the continuous limit) as:
 
 $$
 D^\alpha f(x)
@@ -174,7 +174,7 @@ $$
 
 Under standard assumptions—including Lipschitz continuity and boundedness—fractional gradient descent exhibits:
 
-- Convergence for all \( 0 < \alpha \le 1 \)  
+- Convergence for all $$\( 0 < \alpha \le 1 \)$$
 - Guaranteed descent under Armijo conditions  
 - Enhanced stability for noisy or non-convex landscapes via V2 and V3 line-search variants  
 
