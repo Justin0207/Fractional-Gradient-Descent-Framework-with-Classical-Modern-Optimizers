@@ -83,129 +83,83 @@ This repository includes a full example demonstrating:
 
 ## 📘 Mathematical Foundations
 
-This section outlines the theoretical underpinnings of the framework, including fractional calculus, fractional gradient descent, line-search theory, and their interaction with modern optimizers.
+This section provides the theoretical background behind our **Fractional Gradient Framework**, **Armijo Line Search Variants**, and **Optimizer Integrations**.
 
 ---
 
-## 1. Fractional Calculus in Optimization
+### 1. Fractional Calculus (Grünwald–Letnikov Derivative)
 
-Fractional calculus extends classical differentiation by permitting non-integer derivative orders.  
-This introduces a memory effect, enabling gradients to incorporate information from previous states.
+Fractional calculus extends classical differentiation by permitting **non-integer derivative orders**, which introduces a memory effect: gradients incorporate information from previous states.
 
-### **Grünwald–Letnikov Fractional Derivative**
+The Grünwald–Letnikov fractional derivative of order \( \alpha \) is defined (in the continuous limit) as:
 
-For a function \( f(x) \), the Grünwald–Letnikov derivative of order \( \alpha \) is approximated as:
+$$
+D^\alpha f(x)
+= \lim_{h \to 0} \frac{1}{h^\alpha}
+\sum_{k=0}^{\left\lfloor \frac{x-a}{h} \right\rfloor}
+(-1)^k \binom{\alpha}{k} \, f(x - k h)
+$$
 
-\[
-D^\alpha f(x) \approx 
-\frac{1}{h^\alpha} \sum_{k=0}^{N} (-1)^k 
-\binom{\alpha}{k} f(x - kh)
-\]
+In discrete settings (e.g. \(h=1\) and finite memory \(N\)), this is approximated by:
 
-Where:
+$$
+D^\alpha f(x_t) \approx
+\sum_{k=0}^{N} w_k^{(\alpha)} \, f(x_{t-k}),
+\qquad
+w_k^{(\alpha)} = (-1)^k \binom{\alpha}{k}.
+$$
 
-- \( \alpha \in (0,1] \) is the fractional order  
-- \( \binom{\alpha}{k} \) uses the Gamma function  
-- \( N \) is the memory length  
-- \( h \) is the step size  
-
-**Special Cases**
-
-- \( \alpha = 1 \): Recovers the classical first-order derivative  
-- \( \alpha < 1 \): Produces smoother and more stable gradients, useful in noisy or high-curvature regions  
+Here \( \binom{\alpha}{k} = \dfrac{\Gamma(\alpha+1)}{\Gamma(k+1)\Gamma(\alpha-k+1)} \).  
+When \( \alpha = 1 \) the expression reduces to the classical first-order derivative. Values \( \alpha < 1 \) impart smoothing and memory, which can reduce oscillation and improve stability.
 
 ---
 
-## 2. Fractional Gradient Descent (FGD)
+### 2. Armijo Backtracking Line Search
 
-Parameter updates follow:
+To select stable step sizes we enforce an Armijo-type condition. For a (fractional) gradient \(g\) and step size \(\eta\):
 
-\[
-\theta_{t+1} = \theta_t - \eta \, D^\alpha_\theta L(\theta_t)
-\]
+$$
+f(x - \eta g) \le f(x) - c_1 \eta \lVert g \rVert^2,
+\qquad c_1 \in (0,1).
+$$
 
-Benefits:
+We implement three variants:
 
-- Enhanced stability on noisy loss surfaces  
-- Reduced oscillations near optima  
-- Improved generalization  
-- Smoother convergence trajectories  
+- **V1 — Classical Armijo Backtracking:** standard backtracking to satisfy the Armijo inequality.  
+- **V2 — Adaptive Armijo (curvature correction):** adjust \(\eta\) using curvature estimates, e.g. \(\eta \leftarrow \rho(\kappa)\eta\), with \(\rho(\kappa)\in(0,1)\).  
+- **V3 — Non-monotone Armijo:** allow temporary increases in loss using a windowed max:
 
----
+$$
+f(x - \eta g) \le \max_{k-M \le j \le k} f(x_j) - c_1 \eta \, g^\top d,
+$$
 
-## 3. Armijo Backtracking Line Search Variants
-
-Three variants of Armijo Backtracking are implemented to compute an adaptive step size \( \eta \).
-
----
-
-### **V1 — Classical Armijo Backtracking**
-
-Finds the largest \( \eta \) satisfying:
-
-\[
-f(x - \eta g) \le f(x) - c_1 \eta \lVert g \rVert^2
-\]
-
-Where \( g \) is the (fractional) gradient.
+where \(M\) is the memory window and \(d\) is the search direction.
 
 ---
 
-### **V2 — Adaptive Armijo with Curvature Correction**
+### 3. Fractional Gradient Descent (FGD) and Integration with Optimizers
 
-Step size adapts according to curvature:
+Given a loss \(L(\theta)\), fractional gradient descent updates are:
 
-\[
-\eta \leftarrow \rho(\kappa) \cdot \eta
-\]
+$$
+\theta_{t+1} = \theta_t - \eta_t \, D^\alpha_\theta L(\theta_t).
+$$
 
-Where:
+When used inside modern optimizers, the fractional gradient \(g_t = D^\alpha_\theta L(\theta_t)\) replaces the ordinary gradient. Example (Lion-style signed update):
 
-- \( \kappa \) is a curvature estimate  
-- \( \rho(\kappa) \in (0,1) \) adjusts the aggressiveness of step-size reduction  
+$$
+\theta_{t+1} = \theta_t - \eta_t \, \mathrm{sign}(g_t).
+$$
 
-This greatly improves stability on steep, irregular, or non-smooth loss landscapes.
+More generally, each optimizer consumes \(D^\alpha_\theta L\):
 
----
-
-### **V3 — Non-Monotone Armijo Search**
-
-Allows slight increases in loss:
-
-\[
-f(x - \eta g) \le 
-\max_{k-M \le j \le k} f(x_j) 
-- c_1 \eta g^T d
-\]
-
-Where:
-
-- \( M \) is the memory window  
-- \( d \) is the search direction  
-
-Useful for:
-
-- Noisy objectives  
-- Loss surfaces with many small local minima  
-- Fractional gradients that produce smooth but non-monotonic paths  
+$$
+\theta_{t+1} = \theta_t - \eta_t \cdot \mathrm{Optimizer}\!\big(D^\alpha_\theta L(\theta_t)\big).
+$$
 
 ---
 
-## 4. Integrating Fractional Gradients with Modern Optimizers
-
-The framework supports many state-of-the-art optimizers.  
-Each update takes the form:
-
-\[
-\theta_{t+1} = \theta_t - \eta \cdot 
-\text{Optimizer}(D^\alpha_\theta L)
-\]
-
-Incorporating fractional gradients allows optimizers to leverage historical curvature information and long-term memory, which enhances convergence behavior and stability.
-
----
-
-## 5. Why the Combined Framework Works
+## 4. Why the Combined Framework Works
 
 | Component | Contribution |
 |----------|--------------|
@@ -216,7 +170,7 @@ Incorporating fractional gradients allows optimizers to leverage historical curv
 
 ---
 
-## 6. Convergence Considerations
+## 5. Convergence Considerations
 
 Under standard assumptions—including Lipschitz continuity and boundedness—fractional gradient descent exhibits:
 
@@ -234,7 +188,4 @@ MIT License. See `LICENSE` for details.
 
 ---
 
-## ✉️ Contact
-
-For questions or collaboration inquiries, please feel free to open an issue or contact the maintainer.
 
