@@ -139,19 +139,19 @@ where \(M\) is the memory window and \(d\) is the search direction.
 
 ### 3. Fractional Gradient Descent (FGD) and Integration with Optimizers
 
-Given a loss \(L(\theta)\), fractional gradient descent updates are:
+Given a loss $$\(L(\theta)\)$$, fractional gradient descent updates are:
 
 $$
 \theta_{t+1} = \theta_t - \eta_t \, D^\alpha_\theta L(\theta_t).
 $$
 
-When used inside modern optimizers, the fractional gradient \(g_t = D^\alpha_\theta L(\theta_t)\) replaces the ordinary gradient. Example (Lion-style signed update):
+When used inside modern optimizers, the fractional gradient $$\(g_t = D^\alpha_\theta L(\theta_t)\)$$ replaces the ordinary gradient. Example (Lion-style signed update):
 
 $$
 \theta_{t+1} = \theta_t - \eta_t \, \mathrm{sign}(g_t).
 $$
 
-More generally, each optimizer consumes \(D^\alpha_\theta L\):
+More generally, each optimizer consumes $$\(D^\alpha_\theta L\)$$:
 
 $$
 \theta_{t+1} = \theta_t - \eta_t \cdot \mathrm{Optimizer}\!\big(D^\alpha_\theta L(\theta_t)\big).
