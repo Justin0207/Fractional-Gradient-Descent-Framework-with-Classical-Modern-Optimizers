@@ -55,11 +55,6 @@ Each method supports additional features such as weight decay, bias correction, 
 
 ---
 
-## 📁 Repository Structure
-
-
----
-
 ## 🧪 Example Usage  
 ### Pima Indians Diabetes Classification
 
