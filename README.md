@@ -109,14 +109,14 @@ D^\alpha f(x_t) \approx
 w_k^{(\alpha)} = (-1)^k \binom{\alpha}{k}.
 $$
 
-Here \( \binom{\alpha}{k} = \dfrac{\Gamma(\alpha+1)}{\Gamma(k+1)\Gamma(\alpha-k+1)} \).  
-When \( \alpha = 1 \) the expression reduces to the classical first-order derivative. Values \( \alpha < 1 \) impart smoothing and memory, which can reduce oscillation and improve stability.
+Here $$\( \binom{\alpha}{k} = \dfrac{\Gamma(\alpha+1)}{\Gamma(k+1)\Gamma(\alpha-k+1)} \)$$.  
+When $$\( \alpha = 1 \)$$ the expression reduces to the classical first-order derivative. Values $$\( \alpha < 1 \)$$ impart smoothing and memory, which can reduce oscillation and improve stability.
 
 ---
 
 ### 2. Armijo Backtracking Line Search
 
-To select stable step sizes we enforce an Armijo-type condition. For a (fractional) gradient \(g\) and step size \(\eta\):
+To select stable step sizes we enforce an Armijo-type condition. For a (fractional) gradient $$\(g\)$$ and step size $$\(\eta\)$$:
 
 $$
 f(x - \eta g) \le f(x) - c_1 \eta \lVert g \rVert^2,
