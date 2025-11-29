@@ -192,6 +192,8 @@ MIT License. See `LICENSE` for details.
 
 [1] Hafshejani, S. F., Gaur, D., Hossain, S., & Benkoczi, R. (2023).  
 *Fast Armijo Line Search for Stochastic Gradient Descent.*  
+
 [2] Chen, S., Zhang, C., & Mu, H. (2024). An adaptive learning rate deep learning optimizer using long and short-term gradients based on G–L fractional-order derivative. Neural Processing Letters, 56(2), 106.
+
 [3] Zhou, X., Zhao, C., & Huang, Y. (2023). A deep learning optimizer based on Grünwald–Letnikov fractional order definition. Mathematics, 11(2), 316.
 
