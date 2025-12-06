@@ -31,6 +31,12 @@ class Optimizer:
         self.mw = None
         self.mb = 0.0
 
+        self.prev_g = None
+        self.prev_d = None
+        self.prev_gb = None
+        self.prev_db = None
+        self.iteration = 0
+
         self.v_hat_w = None
         self.v_hat_b = None
 
@@ -241,6 +247,56 @@ class Optimizer:
             w = w - self.lr * (m_hat_w / denom_w)
             b = b - self.lr * (m_hat_b / denom_b)
 
+            return w, b
+
+        if self.optimizer == 'conjugate':
+            g = grad_w
+            gb = grad_b
+        
+            # ---- Initialization (first iteration) ----
+            if t == 1:
+                self.prev_g = g.copy()
+                self.prev_gb = gb
+                self.prev_d = -g.copy()
+                self.prev_db = -gb
+        
+                # line search
+                lr_t = self._maybe_line_search(objective, X, y,
+                                               w, b,
+                                               self.prev_g, self.prev_gb,
+                                               self.prev_d, self.prev_db)
+        
+                w = w + lr_t * self.prev_d
+                b = b + lr_t * self.prev_db
+                return w, b
+
+        # ---- Fletcher–Reeves (one beta for whole gradient) ----
+            num = np.sum(g * g)
+            den = np.sum(self.prev_g * self.prev_g) + 1e-12
+            beta = num / den
+        
+            # ---- New conjugate direction ----
+            d = -g + beta * self.prev_d
+            db = -gb + beta * self.prev_db
+        
+            # Restart if not descent
+            if np.sum(g * d) >= 0:
+                d = -g
+                db = -gb
+        
+            # ---- Armijo line search ----
+            lr_t = self._maybe_line_search(objective, X, y, w, b, g, gb, d, db)
+        
+            # ---- Update parameters ----
+            w = w + lr_t * d
+            b = b + lr_t * db
+        
+            # update memory
+            self.prev_g = g.copy()
+            self.prev_d = d.copy()
+            self.prev_gb = gb
+            self.prev_db = db
+    
             return w, b
 
         if self.line_search:
